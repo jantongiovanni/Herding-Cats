@@ -2,8 +2,8 @@ var puck;
 var left;
 var right;
 
-let leftscore = 0;
-//let rightscore = 0;
+let highscore = 0;
+let score = 0;
 
 function setup() {
  createCanvas(600,400);
@@ -28,19 +28,18 @@ function draw() {
    left.move();
    right.move();
 
- 	textSize(32);
-    text(leftscore, 32, 40);
-    //text(rightscore, width-64, 40);
-
+  textSize(16);
+    text("Score: " + score, width - 100, 40);
+    text("High Score: " + highscore, 32, 40)
 }
 
 function keyPressed() {
-	if(key == ' '){
-		puck.up();
-	}
+  if(key == ' '){
+    puck.up();
+  }
 }
 
 function mouseClicked() {
-	puck.up();
+  puck.up();
 }
 

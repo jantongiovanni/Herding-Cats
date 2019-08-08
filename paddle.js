@@ -18,22 +18,20 @@ class Paddle {
     
     update() {
         this.y += this.ychange;
-        //this.y = constrain(this.y, this.h/2, height-this.h/2);
     }
     
     move() {
-    	//this.ychange = random(-1, 1);
-    	if(this.direction == 1){
-    		this.y += 1.5;
-    	} else {
-    		this.y -= 1.5;
-    	}
+        if(this.direction == 1){
+            this.y += 1.5;
+        } else {
+            this.y -= 1.5;
+        }
 
-    	if(this.y > height-40)
-    		this.direction = 0;
+        if(this.y > height-40)
+            this.direction = 0;
 
-    	if(this.y < 40)
-    		this.direction = 1;
+        if(this.y < 40)
+            this.direction = 1;
     }
     
     show() {

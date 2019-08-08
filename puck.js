@@ -8,24 +8,28 @@ class Puck {
     this.velocity = 0;
 
     this.direction = 1;
+    //1 for right, 0 for left;
 
     this.speed = 4;
-    //1 for right, 0 for left;
 }
 
+    //checks if the puck hits the paddle by comparing xy coordinates
 	checkPaddleR(p) {
-		//console.log(p.x);
 		 if(this.x > p.x-16 && this.y < p.y + p.h/2 && this.y > p.y - p.h/2){
-		 	console.log("Hit right!");
-		 	leftscore++;
+		 	//console.log("Hit right!");
+		 	score++;
+            if(score >= highscore)
+              highscore = score;
 		 	this.direction = 0;
 		 }
 	}
 
 	checkPaddleL(p) {
 		if(this.x < p.x+16 && this.y < p.y + p.h/2 && this.y > p.y - p.h/2){
-			console.log("Hit left!");
-			leftscore++;
+			//console.log("Hit left!");
+			score++;
+            if(score >= highscore)
+              highscore = score;
 			this.direction = 1;
 		}
 	}
@@ -36,36 +40,34 @@ class Puck {
 	}
 
 	update() {
-		//physics!
+		//physics
 		this.velocity += this.gravity;
     	this.y += this.velocity;
-
-    	if(leftscore >= 5 && leftscore < 15){
+        //increase difficulty
+    	if(score >= 5 && score < 15){
     		this.speed = 6;
     	}
-    	if(leftscore >= 15)
+    	if(score >= 15){
     		this.speed = 8;
-
+        }
     	//left right movement
     	if(this.direction == 1){
     		this.x += this.speed;
     	} else {
     		this.x -= this.speed;
     	}
-    		// console.log(width);
-    		 //console.log(this.x);
+    
+        //puck reset      
     	if(this.x > width-24){
     		this.direction = 0;
-    		leftscore = 0;
+    		score = 0;
     		this.speed = 4;
     		this.y = height/2;
 			this.x = width/2;
-
     	}
-
     	if(this.x < 24){
     		this.direction = 1;
-    		leftscore = 0;
+    		score = 0;
     		this.speed = 4;
     		this.y = height/2;
 			this.x = width/2;
@@ -74,7 +76,6 @@ class Puck {
     	//keep the puck on screen
 		if(this.y > height-16){
 			this.y = height-16;
-			//want to change this, only want to bounce off of the paddles
 			this.velocity -= this.gravity*3;
 		}
 		if(this.y < 0){
