@@ -1,4 +1,14 @@
 const cats = [];
+let lineStroke;
+let lineDist = 120;
+let distX;
+let distY;
+let distMouse;
+
+let x = [0, 0],
+  y = [0, 0],
+  segLength = 30;
+
 
 function setup() {
   createCanvas(window.innerWidth, window.innerHeight);
@@ -12,13 +22,17 @@ function setup() {
 
 function draw(){
   background(55,100,144);
+  // noFill();
+  // circle(mouseX, mouseY, 120);
+  // noCursor();
+  dragSegment(0, mouseX, mouseY);
+  dragSegment(1, x[0], y[0]);
+
   cats.forEach((cat, index) => {
     cat.update();
     cat.drawCat();
     cat.checkCats(cats.slice(index));
   })
-
-
 }
 
 class Cat {
@@ -55,8 +69,7 @@ class Cat {
 
   //connect
   checkCats(cats){
-    let lineStroke;
-    let lineDist = 120;
+
     cats.forEach(cat => {
       const d = dist(this.pos.x, this.pos.y, cat.pos.x, cat.pos.y);
       if(d < lineDist) {
@@ -65,8 +78,33 @@ class Cat {
         stroke(lineStroke);
         line(this.pos.x, this.pos.y, cat.pos.x, cat.pos.y);
       }
+      distX = this.pos.x - mouseX;
+      distY = this.pos.y - mouseY;
+      distMouse = sqrt(distX * distX + distY + distY);
 
+      if(distMouse < 30) {
+
+      } else {
+
+      }
     })
   }
 
+}
+
+function dragSegment(i, xin, yin) {
+  const dx = xin - x[i];
+  const dy = yin - y[i];
+  const angle = atan2(dy, dx);
+  x[i] = xin - cos(angle) * segLength;
+  y[i] = yin - sin(angle) * segLength;
+  segment(x[i], y[i], angle);
+}
+
+function segment(x, y, a) {
+  push();
+  translate(x, y);
+  rotate(a);
+  line(0, 0, segLength, 0);
+  pop();
 }
