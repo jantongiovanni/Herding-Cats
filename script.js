@@ -5,6 +5,8 @@ let distX;
 let distY;
 let distMouse;
 
+let catImg;
+
 let x = [0, 0],
   y = [0, 0],
   segLength = 30;
@@ -13,6 +15,8 @@ let x = [0, 0],
 function setup() {
   createCanvas(window.innerWidth, window.innerHeight);
   //based on size of window
+
+  catImg = loadImage('assets/orangeCat2d.png');
   const catsNum = Math.floor(window.innerWidth/10);
   //console.log(catsNum);
   for(let i = 0; i < catsNum; i++){
@@ -25,13 +29,17 @@ function draw(){
   // noFill();
   // circle(mouseX, mouseY, 120);
   // noCursor();
+
+  //image(catImg, 0, 0);
+
   dragSegment(0, mouseX, mouseY);
   dragSegment(1, x[0], y[0]);
 
   cats.forEach((cat, index) => {
     cat.update();
-    cat.drawCat();
     cat.checkCats(cats.slice(index));
+    cat.drawCat();
+
   })
 }
 
@@ -40,9 +48,9 @@ class Cat {
     //position - vector: entitity with direction and magnitude on xy axis
     this.pos = createVector(random(width), random(height));
     //velocity - left or right, up or down, and speed
-    this.vel = createVector(random(-2,2), random(-2,2));
+    this.vel = createVector(random(-0.5 , 0.5), random(-0.5 , 0.5));
     ///size
-    this.size = 5;
+    this.size = 50;
   }
 
 //update movement by adding velocity
@@ -52,9 +60,10 @@ class Cat {
   }
 
   drawCat() {
-    noStroke();
-    fill('rbga(255,255,255, 0.5)');
-    circle(this.pos.x, this.pos.y, this.size)
+    image(catImg, this.pos.x-this.size/2, this.pos.y-this.size/2, this.size*1.28, this.size);
+    // noStroke();
+    // fill('rbga(255,255,255, 0.5)');
+    // circle(this.pos.x, this.pos.y, this.size)
   }
 
   //detect edges
@@ -71,27 +80,44 @@ class Cat {
   checkCats(cats){
 
     cats.forEach(cat => {
-      const d = dist(this.pos.x, this.pos.y, cat.pos.x, cat.pos.y);
-      if(d < lineDist) {
-        lineStroke = color(255,255,255);
-        lineStroke.setAlpha((lineDist-d)*2);
-        stroke(lineStroke);
-        line(this.pos.x, this.pos.y, cat.pos.x, cat.pos.y);
-      }
-      distX = this.pos.x - mouseX;
-      distY = this.pos.y - mouseY;
-      distMouse = sqrt(distX * distX + distY + distY);
+      //distance between cats
+      // const catDist = dist(this.pos.x, this.pos.y, cat.pos.x, cat.pos.y);
+      // if(catDist < lineDist) {
+      //   lineStroke = color(255,255,255);
+      //   lineStroke.setAlpha((lineDist-catDist)*2);
+      //   stroke(lineStroke);
+      //   line(this.pos.x, this.pos.y, cat.pos.x, cat.pos.y);
+      // }
 
-      if(distMouse < 30) {
+      //distance between cat and cursor
+      const cursorDist = dist(this.pos.x, this.pos.y, mouseX, mouseY);
+      if(cursorDist < 150){
+        if(this.pos.x > mouseX){
+          this.pos.x += 1;
+          this.vel.x*= -1;
+          this.vel.y *= -1;
+        }
+        else{
+          this.pos.x -= 1;
+          this.vel.x*= -1;
+          this.vel.y *= -1;
+        }
+        if(this.pos.y > mouseY){
+          this.pos.y += 1;
 
-      } else {
+        }
+        else{
+          this.pos.y -= 1;
 
+        }
       }
     })
   }
 
+
 }
 
+//https://p5js.org/examples/interaction-follow-2.html
 function dragSegment(i, xin, yin) {
   const dx = xin - x[i];
   const dy = yin - y[i];
